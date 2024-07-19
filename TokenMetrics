@@ -1,0 +1,43 @@
+# scripts/token_performance.py
+
+import requests
+import pandas as pd
+
+def fetch_token_performance(api_url, token_id):
+    """
+    Fetch token performance data from an API.
+    
+    :param api_url: Base URL of the token API
+    :param token_id: ID of the token to fetch performance for
+    :return: DataFrame with token performance data
+    """
+    response = requests.get(f'{api_url}/token_performance/{token_id}')
+    response.raise_for_status()
+    data = response.json()
+    df = pd.DataFrame(data)
+    return df
+
+def analyze_token_performance(df):
+    """
+    Analyze token performance data.
+    
+    :param df: DataFrame with token performance data
+    :return: Analysis results as DataFrame
+    """
+    analysis = {
+        'token_id': df['token_id'].iloc[0],
+        'current_price': df['price'].iloc[0],
+        'market_cap': df['market_cap'].iloc[0],
+        '24h_volume': df['volume_24h'].iloc[0],
+        'percentage_change': df['percentage_change'].iloc[0]
+    }
+    analysis_df = pd.DataFrame([analysis])
+    return analysis_df
+
+# Example usage:
+# api_url = 'https://api.token.example.com'
+# token_id = 'token_123'
+# token_performance_df = fetch_token_performance(api_url, token_id)
+# print(token_performance_df)
+# token_performance_analysis_df = analyze_token_performance(token_performance_df)
+# print(token_performance_analysis_df)
